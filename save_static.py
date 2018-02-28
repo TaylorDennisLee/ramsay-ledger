@@ -17,10 +17,18 @@ import requests
 import os
 import csv
 import subprocess
+import stat
 
-OUTPUT_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/export/"
-STATIC_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/static"
-STATIC_OUTPUT_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/export/"
+# OUTPUT_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/export/"
+# STATIC_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/static"
+# STATIC_OUTPUT_LOCATION = "/home/mlemmer/Desktop/Documents/Database/flaskproject/export/"
+
+OUTPUT_LOCATION = "/home/taylorl/Desktop/Bandit/static-default/"
+
+
+STATIC_LOCATION = "/home/taylorl/Desktop/Bandit/ramsay-default/static"
+
+
 
 def static_save_page(page_name):
     page_url = "http://127.0.0.1:5000/" + page_name
@@ -46,7 +54,12 @@ with open("LedgerDB.csv") as object_map_file:
 
 subprocess.Popen([
     "rsync", "--archive", "--verbose", "--recursive",
-    STATIC_LOCATION, STATIC_OUTPUT_LOCATION])
+    STATIC_LOCATION, OUTPUT_LOCATION])
 
+
+with open(OUTPUT_LOCATION + 'run_static.sh','w') as run_static_server_script:
+    run_static_server_script.write('#!/usr/bin/env sh\n\npython3 -m http.server')
+
+os.chmod(OUTPUT_LOCATION + '/run_static.sh', 0o755)
 print("\nDone!")
 
